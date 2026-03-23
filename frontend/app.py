@@ -10,40 +10,48 @@ st.set_page_config(page_title="Manufacturing Predictor", layout="wide")
 st.markdown("""
     <style>
     body {
-        background-color: #f5ebe0;
+        background: linear-gradient(135deg, #f5ebe0, #e6ccb2);
     }
     .main {
-        background-color: #f5ebe0;
+        background: linear-gradient(135deg, #f5ebe0, #e6ccb2);
     }
+
     h1, h2, h3 {
         color: #5e3023;
     }
+
     .stButton>button {
         background-color: #7f5539;
         color: white;
         border-radius: 12px;
         padding: 12px 24px;
         font-size: 18px;
-        transition: 0.3s;
+        transition: all 0.3s ease;
+        width: 100%;
     }
+
     .stButton>button:hover {
         background-color: #9c6644;
         transform: scale(1.05);
+        box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
     }
+
     .result-card {
-        background-color: #ede0d4;
+        background: linear-gradient(145deg, #ede0d4, #e6ccb2);
         padding: 30px;
         border-radius: 15px;
         text-align: center;
-        box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+        box-shadow: 4px 4px 20px rgba(0,0,0,0.1);
     }
+
     .big-text {
-        font-size: 40px;
+        font-size: 42px;
         color: #6f1d1b;
         font-weight: bold;
     }
     </style>
 """, unsafe_allow_html=True)
+
 
 # --------------------------
 # Title
@@ -124,6 +132,12 @@ with right:
             </div>
         """, unsafe_allow_html=True)
 
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # 🚀 BUTTON MOVED HERE
+    predict_clicked = st.button("🚀 Predict Output")
+
+
 # --------------------------
 # Encoding
 # --------------------------
@@ -148,7 +162,8 @@ Day_of_Week_Wednesday = 1 if day == "Wednesday" else 0
 # --------------------------
 st.divider()
 
-if st.button("🚀 Predict Output"):
+if predict_clicked:
+
 
     with st.spinner("Predicting... ⏳"):
         time.sleep(1)  # smooth UX
