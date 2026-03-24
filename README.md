@@ -1,4 +1,5 @@
 # 🏭 Manufacturing Output Prediction System
+👉 Runs at: http://localhost:8501
 
 An AI-powered web application that predicts manufacturing output based on machine parameters, performance metrics, and operational conditions.
 
