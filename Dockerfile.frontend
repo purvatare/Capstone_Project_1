@@ -1,0 +1,17 @@
+# Dockerfile.frontend
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# Copy and install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy frontend code and models
+COPY frontend/ ./frontend/
+COPY models/ ./models/
+
+EXPOSE 8501
+
+# Use python -m to run streamlit (more reliable in Docker)
+CMD ["python", "-m", "streamlit", "run", "frontend/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
