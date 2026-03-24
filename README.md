@@ -28,17 +28,18 @@ An AI-powered web application that predicts manufacturing output based on machin
 ## 📂 Project Structure
 
 manufacturing-output-prediction/
-│
 ├── app/
-│ └── main.py # FastAPI backend
-│
+│   └── main.py
 ├── frontend/
-│ └── app.py # Streamlit UI
-│
+│   └── app.py
 ├── models/
-│ └── linear_regression_model.pkl
-│
-├── venv/ # Virtual environment
+│   ├── linear_regression_model.pkl
+│   └── scaler.pkl
+├── Dockerfile.backend
+├── Dockerfile.frontend
+├── docker-compose.yml
+├── .dockerignore
+├── .gitignore
 ├── requirements.txt
 └── README.md
 
