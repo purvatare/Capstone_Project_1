@@ -1,6 +1,8 @@
 import streamlit as st
 import requests
 import time
+import plotly.graph_objects as go
+
 
 st.set_page_config(page_title="Manufacturing Predictor", layout="wide")
 
@@ -132,30 +134,100 @@ with right:
             </div>
         """, unsafe_allow_html=True)
 
+    
+
     st.markdown("<br>", unsafe_allow_html=True)
 
     # 🚀 BUTTON MOVED HERE
     predict_clicked = st.button("🚀 Predict Output")
-
-
 # --------------------------
 # Encoding
 # --------------------------
-Shift_Evening = 1 if shift_evening else 0
-Shift_Night = 1 if shift_night else 0
+    Shift_Evening = 1 if shift_evening else 0
+    Shift_Night = 1 if shift_night else 0
 
-Machine_Type_Type_B = 1 if machine_type == "Type_B" else 0
-Machine_Type_Type_C = 1 if machine_type == "Type_C" else 0
+    Machine_Type_Type_B = 1 if machine_type == "Type_B" else 0
+    Machine_Type_Type_C = 1 if machine_type == "Type_C" else 0
 
-Material_Grade_Premium = 1 if material == "Premium" else 0
-Material_Grade_Standard = 1 if material == "Standard" else 0
+    Material_Grade_Premium = 1 if material == "Premium" else 0
+    Material_Grade_Standard = 1 if material == "Standard" else 0
 
-Day_of_Week_Monday = 1 if day == "Monday" else 0
-Day_of_Week_Saturday = 1 if day == "Saturday" else 0
-Day_of_Week_Sunday = 1 if day == "Sunday" else 0
-Day_of_Week_Thursday = 1 if day == "Thursday" else 0
-Day_of_Week_Tuesday = 1 if day == "Tuesday" else 0
-Day_of_Week_Wednesday = 1 if day == "Wednesday" else 0
+    Day_of_Week_Monday = 1 if day == "Monday" else 0
+    Day_of_Week_Saturday = 1 if day == "Saturday" else 0
+    Day_of_Week_Sunday = 1 if day == "Sunday" else 0
+    Day_of_Week_Thursday = 1 if day == "Thursday" else 0
+    Day_of_Week_Tuesday = 1 if day == "Tuesday" else 0
+    Day_of_Week_Wednesday = 1 if day == "Wednesday" else 0
+
+# --------------------------
+# 📊 Live Chart
+# --------------------------
+    if "prediction" in st.session_state:
+
+        # Generate efficiency range
+        efficiency_values = [i/10 for i in range(1, 11)]  # 0.1 → 1.0
+        predictions = []
+
+        for eff in efficiency_values:
+            temp_input = {
+                "Injection_Temperature": Injection_Temperature,
+                "Injection_Pressure": Injection_Pressure,
+                "Cycle_Time": Cycle_Time,
+                "Cooling_Time": Cooling_Time,
+                "Material_Viscosity": Material_Viscosity,
+                "Ambient_Temperature": Ambient_Temperature,
+                "Machine_Age": Machine_Age,
+                "Operator_Experience": Operator_Experience,
+                "Maintenance_Hours": Maintenance_Hours,
+                "Temperature_Pressure_Ratio": Temperature_Pressure_Ratio,
+                "Total_Cycle_Time": Total_Cycle_Time,
+                "Efficiency_Score": eff,  # ✅ FIXED
+                "Machine_Utilization": Machine_Utilization,
+                "Shift_Evening": Shift_Evening,
+                "Shift_Night": Shift_Night,
+                "Machine_Type_Type_B": Machine_Type_Type_B,
+                "Machine_Type_Type_C": Machine_Type_Type_C,
+                "Material_Grade_Premium": Material_Grade_Premium,
+                "Material_Grade_Standard": Material_Grade_Standard,
+                "Day_of_Week_Monday": Day_of_Week_Monday,
+                "Day_of_Week_Saturday": Day_of_Week_Saturday,
+                "Day_of_Week_Sunday": Day_of_Week_Sunday,
+                "Day_of_Week_Thursday": Day_of_Week_Thursday,
+                "Day_of_Week_Tuesday": Day_of_Week_Tuesday,
+                "Day_of_Week_Wednesday": Day_of_Week_Wednesday
+            }
+        
+
+            try:
+                response = requests.post(
+                    "http://127.0.0.1:8000/predict",
+                    json=temp_input
+                )
+                pred = response.json()["prediction"]
+                predictions.append(pred)
+            except:
+                predictions.append(None)
+
+        # Create chart
+        fig = go.Figure()
+
+        fig.add_trace(go.Scatter(
+            x=efficiency_values,
+            y=predictions,
+            mode='lines+markers',
+            name='Prediction',
+            line=dict(width=3)
+        ))
+
+        fig.update_layout(
+            title="📊 Output vs Efficiency",
+            xaxis_title="Efficiency Score",
+            yaxis_title="Predicted Output",
+            template="plotly_dark",
+            height=300
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
 
 # --------------------------
 # Predict Button
