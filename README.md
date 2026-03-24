@@ -44,10 +44,9 @@ manufacturing-output-prediction/
 └── README.md
 
 ⚙️ Setup Instructions
-
-
+```bash
 1️⃣ Clone the repository
-git clone https://github.com/purvatare/Capstone_Project_1.git
+git clone https://github.com/your-username/manufacturing-output-prediction.git
 cd manufacturing-output-prediction
 2️⃣ Create & activate virtual environment
 python3 -m venv venv
@@ -59,7 +58,6 @@ pip install -r requirements.txt
 pip install fastapi uvicorn scikit-learn joblib streamlit plotly
 4️⃣ Run Backend (FastAPI)
 uvicorn app.main:app --reload
-👉 Runs at: http://127.0.0.1:8000
 
 5️⃣ Run Frontend (Streamlit)
 Open a new terminal:
@@ -67,8 +65,6 @@ Open a new terminal:
 source venv/bin/activate
 streamlit run frontend/app.py
 👉 Runs at: http://localhost:8501
-
-
 
 📊 How It Works
 User inputs machine & operational parameters
