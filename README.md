@@ -45,7 +45,7 @@ manufacturing-output-prediction/
 
 ⚙️ Setup Instructions
 
-```bash
+
 1️⃣ Clone the repository
 git clone https://github.com/purvatare/Capstone_Project_1.git
 cd manufacturing-output-prediction
@@ -92,6 +92,11 @@ docker compose restart,Restart both services
 docker compose restart frontend,Restart only frontend
 docker compose logs -f,View real-time logs
 docker compose build --no-cache,Rebuild images after code changes
+
+App URLs:
+
+Frontend (Streamlit) → http://localhost:8501
+Backend API Docs → http://localhost:8000/docs
 
 📸 Screenshots
 <img width="1440" height="858" alt="image" src="https://github.com/user-attachments/assets/eff9338c-4a80-462b-8694-fdc7568b1167" />
