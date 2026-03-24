@@ -1,0 +1,82 @@
+# 🏭 Manufacturing Output Prediction System
+
+An AI-powered web application that predicts manufacturing output based on machine parameters, performance metrics, and operational conditions.
+
+---
+
+## 📌 Features
+
+- 🔮 Predict manufacturing output using Machine Learning
+- 📊 Interactive UI built with Streamlit
+- ⚙️ FastAPI backend for model inference
+- 📈 Live chart: Output vs Efficiency
+- 🎛️ Dynamic inputs (sliders, toggles, dropdowns)
+- 🎨 Modern UI with Glassmorphism & Dark Theme
+
+---
+
+## 🧠 Tech Stack
+
+- **Frontend:** Streamlit
+- **Backend:** FastAPI
+- **ML Model:** Linear Regression (Scikit-learn)
+- **Visualization:** Plotly
+- **Language:** Python
+
+---
+
+## 📂 Project Structure
+
+manufacturing-output-prediction/
+│
+├── app/
+│ └── main.py # FastAPI backend
+│
+├── frontend/
+│ └── app.py # Streamlit UI
+│
+├── models/
+│ └── linear_regression_model.pkl
+│
+├── venv/ # Virtual environment
+├── requirements.txt
+└── README.md
+
+⚙️ Setup Instructions
+
+```bash
+1️⃣ Clone the repository
+git clone https://github.com/purvatare/Capstone_Project_1.git
+cd manufacturing-output-prediction
+2️⃣ Create & activate virtual environment
+python3 -m venv venv
+source venv/bin/activate   # Mac/Linux
+3️⃣ Install dependencies
+pip install -r requirements.txt
+(or manually)
+
+pip install fastapi uvicorn scikit-learn joblib streamlit plotly
+4️⃣ Run Backend (FastAPI)
+uvicorn app.main:app --reload
+👉 Runs at: http://127.0.0.1:8000
+
+5️⃣ Run Frontend (Streamlit)
+Open a new terminal:
+
+source venv/bin/activate
+streamlit run frontend/app.py
+👉 Runs at: http://localhost:8501
+
+
+
+📊 How It Works
+User inputs machine & operational parameters
+Data is sent to FastAPI backend
+ML model predicts output
+Result is displayed with a live visualization
+
+📸 Screenshots
+<img width="1440" height="858" alt="image" src="https://github.com/user-attachments/assets/eff9338c-4a80-462b-8694-fdc7568b1167" />
+<img width="1440" height="859" alt="image" src="https://github.com/user-attachments/assets/2ba9b582-7eda-4568-a75b-fe6e7f3dd6ea" />
+
+
