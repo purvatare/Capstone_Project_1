@@ -76,6 +76,23 @@ Data is sent to FastAPI backend
 ML model predicts output
 Result is displayed with a live visualization
 
+🐳 Docker Support
+The project includes:
+
+Multi-stage Docker setup (separate backend & frontend)
+Proper environment variable handling (BACKEND_URL)
+Optimized Dockerfiles with minimal image size
+.dockerignore for clean builds
+
+🛠️ Useful Docker Commands
+Command,Description
+docker compose up -d,Start the app in background
+docker compose down,Stop and remove containers
+docker compose restart,Restart both services
+docker compose restart frontend,Restart only frontend
+docker compose logs -f,View real-time logs
+docker compose build --no-cache,Rebuild images after code changes
+
 📸 Screenshots
 <img width="1440" height="858" alt="image" src="https://github.com/user-attachments/assets/eff9338c-4a80-462b-8694-fdc7568b1167" />
 <img width="1440" height="859" alt="image" src="https://github.com/user-attachments/assets/2ba9b582-7eda-4568-a75b-fe6e7f3dd6ea" />
