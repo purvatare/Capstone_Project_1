@@ -1,12 +1,17 @@
 from fastapi import FastAPI
 import joblib
 import numpy as np
+import os
 
 app = FastAPI()
 
 # Load model and scaler
-model = joblib.load("/Users/purvatare/Documents/manufacturing-output-prediction/models/linear_regression_model.pkl")
-scaler = joblib.load("/Users/purvatare/Documents/manufacturing-output-prediction/models/scaler.pkl")
+
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+model = joblib.load(os.path.join(BASE_DIR, "../models/linear_regression_model.pkl"))
+scaler = joblib.load(os.path.join(BASE_DIR, "../models/scaler.pkl"))
 
 
 @app.get("/")

@@ -14,9 +14,9 @@ services:
       dockerfile: Dockerfile.frontend
     container_name: manufacturing-frontend
     ports:
-      - "8501:8501"
+      - "8501:8501"      # ← This is what you want
     depends_on:
       - backend
     environment:
-      - BACKEND_URL=http://backend:8000
+      BACKEND_URL: http://backend:8000
     restart: unless-stopped

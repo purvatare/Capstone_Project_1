@@ -2,147 +2,137 @@ import streamlit as st
 import requests
 import time
 import plotly.graph_objects as go
+import os
 
+st.set_page_config(page_title="Manufacturing Predictor", layout="wide", page_icon="🏭")
 
-st.set_page_config(page_title="Manufacturing Predictor", layout="wide")
-
-# --------------------------
-# 🎨 Custom Beige-Brown Theme
-# --------------------------
+# ====================== ATTRACTIVE THEME ======================
 st.markdown("""
     <style>
-    body {
-        background: linear-gradient(135deg, #f5ebe0, #e6ccb2);
-    }
-    .main {
-        background: linear-gradient(135deg, #f5ebe0, #e6ccb2);
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap');
+
+    body, .main {
+        background: linear-gradient(135deg, #f8f1e9 0%, #e8d9c2 100%);
+        font-family: 'Inter', sans-serif;
     }
 
     h1, h2, h3 {
-        color: #5e3023;
+        font-family: 'Playfair Display', sans-serif;
+        color: #6b4426;
     }
 
     .stButton>button {
-        background-color: #7f5539;
+        background: linear-gradient(90deg, #9c6644, #b07a55);
         color: white;
-        border-radius: 12px;
-        padding: 12px 24px;
+        border-radius: 16px;
+        padding: 14px 28px;
         font-size: 18px;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(156, 102, 68, 0.3);
         transition: all 0.3s ease;
-        width: 100%;
     }
 
     .stButton>button:hover {
-        background-color: #9c6644;
-        transform: scale(1.05);
-        box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
+        transform: translateY(-3px) scale(1.03);
+        box-shadow: 0 10px 25px rgba(156, 102, 68, 0.4);
     }
 
+    /* Warm sliders */
+    .stSlider > div > div > div { background-color: #d4b99f !important; }
+    .stSlider > div > div > div > div { background: linear-gradient(90deg, #9c6644, #c89a6e) !important; }
+
     .result-card {
-        background: linear-gradient(145deg, #ede0d4, #e6ccb2);
-        padding: 30px;
-        border-radius: 15px;
+        background: linear-gradient(145deg, #f5e8d3, #e8d4b8);
+        padding: 40px 30px;
+        border-radius: 24px;
         text-align: center;
-        box-shadow: 4px 4px 20px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 30px rgba(63, 42, 30, 0.15);
+        border: 1px solid #e0c9a8;
     }
 
     .big-text {
-        font-size: 42px;
-        color: #6f1d1b;
-        font-weight: bold;
+        font-size: 54px;
+        font-weight: 700;
+        background: linear-gradient(90deg, #6b4426, #9c6644);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
     </style>
 """, unsafe_allow_html=True)
 
-
-# --------------------------
 # Title
-# --------------------------
-st.title("🏭 Manufacturing Output Prediction")
-st.markdown("Optimize your machine performance with AI 🚀")
-
+st.markdown("<h1 style='text-align:center;'>🏭 Manufacturing Intelligence</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align:center; color:#6b4426; font-size:18px;'>AI-Powered Output Prediction</p>", unsafe_allow_html=True)
 st.divider()
 
-# --------------------------
-# Layout
-# --------------------------
-left, right = st.columns([2, 1])
+left, right = st.columns([2.2, 1])
 
-# --------------------------
-# LEFT SIDE INPUTS
-# --------------------------
+# ====================== INPUTS (LEFT) ======================
 with left:
-    st.subheader("⚙️ Machine Parameters")
-
+    st.markdown("### ⚙️ Machine Parameters")
     col1, col2 = st.columns(2)
-
     with col1:
-        Injection_Temperature = st.slider("Injection Temperature", 100, 300, 200)
-        Injection_Pressure = st.slider("Injection Pressure", 10, 100, 50)
-        Cycle_Time = st.slider("Cycle Time", 10, 60, 30)
-        Cooling_Time = st.slider("Cooling Time", 5, 30, 15)
+        Injection_Temperature = st.slider("Injection Temperature (°C)", 100, 300, 200, key="inj_temp")
+        Injection_Pressure    = st.slider("Injection Pressure (bar)", 10, 100, 50, key="inj_press")
+        Cycle_Time            = st.slider("Cycle Time (s)", 10, 60, 30, key="cycle_time")
+        Cooling_Time          = st.slider("Cooling Time (s)", 5, 30, 15, key="cool_time")
 
     with col2:
-        Material_Viscosity = st.slider("Material Viscosity", 50, 200, 120)
-        Ambient_Temperature = st.slider("Ambient Temperature", 10, 50, 25)
-        Machine_Age = st.slider("Machine Age", 1, 20, 5)
-        Operator_Experience = st.slider("Operator Experience", 1, 10, 3)
+        Material_Viscosity    = st.slider("Material Viscosity", 50, 200, 120, key="visc")
+        Ambient_Temperature   = st.slider("Ambient Temperature (°C)", 10, 50, 25, key="amb_temp")
+        Machine_Age           = st.slider("Machine Age (years)", 1, 20, 5, key="age")
+        Operator_Experience   = st.slider("Operator Experience (years)", 1, 10, 3, key="op_exp")
 
-    st.subheader("📊 Performance Metrics")
-
+    st.markdown("### 📊 Performance Metrics")
     col3, col4 = st.columns(2)
-
     with col3:
-        Maintenance_Hours = st.slider("Maintenance Hours", 0, 200, 100)
-        Temperature_Pressure_Ratio = st.slider("Temp-Pressure Ratio", 1, 10, 4)
-        Total_Cycle_Time = st.slider("Total Cycle Time", 20, 100, 45)
+        Maintenance_Hours        = st.slider("Maintenance Hours", 0, 200, 100, key="maint")
+        Temperature_Pressure_Ratio = st.slider("Temp-Pressure Ratio", 1, 10, 4, key="tp_ratio")
+        Total_Cycle_Time         = st.slider("Total Cycle Time (s)", 20, 100, 45, key="total_cycle")
 
     with col4:
-        Efficiency_Score = st.slider("Efficiency Score", 0.0, 1.0, 0.8)
-        Machine_Utilization = st.slider("Machine Utilization", 0.0, 1.0, 0.75)
+        Efficiency_Score   = st.slider("Efficiency Score", 0.0, 1.0, 0.8, step=0.01, key="eff_score")
+        Machine_Utilization = st.slider("Machine Utilization", 0.0, 1.0, 0.75, step=0.01, key="util")
 
-    st.subheader("🔘 Categorical Inputs")
+    st.markdown("### 🔘 Operational Settings")
+    c1, c2 = st.columns(2)
+    with c1:
+        shift_evening = st.toggle("🌅 Evening Shift", key="eve_shift")
+        shift_night   = st.toggle("🌙 Night Shift", key="night_shift")
+    with c2:
+        machine_type = st.selectbox("Machine Type", ["Type_A", "Type_B", "Type_C"], key="mach_type")
+        material     = st.selectbox("Material Grade", ["Economy", "Standard", "Premium"], key="mat_grade")
 
-    shift_evening = st.toggle("Evening Shift")
-    shift_night = st.toggle("Night Shift")
-
-    machine_type = st.selectbox("Machine Type", ["Type_A", "Type_B", "Type_C"])
-    material = st.selectbox("Material Grade", ["Economy", "Standard", "Premium"])
     day = st.selectbox("Day of Week", 
-                       ["Monday", "Tuesday", "Wednesday", "Thursday", "Saturday", "Sunday"])
+                       ["Monday", "Tuesday", "Wednesday", "Thursday", "Saturday", "Sunday"], 
+                       key="day")
 
-# --------------------------
-# RIGHT SIDE RESULT CARD
-# --------------------------
+# ====================== RIGHT PANEL ======================
 with right:
-    st.subheader("📈 Prediction Result")
+    st.markdown("### 📈 Prediction Result")
 
     result_placeholder = st.empty()
 
+    # Show initial or updated prediction
     if "prediction" not in st.session_state:
         result_placeholder.markdown("""
             <div class="result-card">
-                <p>Click Predict to see result</p>
+                <p style="color:#8c6f4f; font-size:18px;">Click Predict to see result</p>
+                <div style="font-size:80px; margin:30px 0; opacity:0.3;">🏭</div>
             </div>
         """, unsafe_allow_html=True)
     else:
         result_placeholder.markdown(f"""
             <div class="result-card">
-                <p>Predicted Output</p>
-                <div class="big-text">{st.session_state['prediction']:.2f}</div>
-                <p>Parts / Hour</p>
+                <p style="font-size:18px; color:#6b4426;">Predicted Output</p>
+                <div class="big-text">{st.session_state['prediction']:.1f}</div>
+                <p style="color:#8c6f4f; font-size:20px;">Parts per Hour</p>
             </div>
         """, unsafe_allow_html=True)
 
-    
+    predict_clicked = st.button("🚀 Predict Output", use_container_width=True, key="predict_btn")
 
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    # 🚀 BUTTON MOVED HERE
-    predict_clicked = st.button("🚀 Predict Output")
-# --------------------------
-# Encoding
-# --------------------------
+    # ====================== ENCODING ======================
     Shift_Evening = 1 if shift_evening else 0
     Shift_Night = 1 if shift_night else 0
 
@@ -152,20 +142,22 @@ with right:
     Material_Grade_Premium = 1 if material == "Premium" else 0
     Material_Grade_Standard = 1 if material == "Standard" else 0
 
+    dow_map = {
+        "Monday": "Monday", "Tuesday": "Tuesday", "Wednesday": "Wednesday",
+        "Thursday": "Thursday", "Saturday": "Saturday", "Sunday": "Sunday"
+    }
     Day_of_Week_Monday = 1 if day == "Monday" else 0
-    Day_of_Week_Saturday = 1 if day == "Saturday" else 0
-    Day_of_Week_Sunday = 1 if day == "Sunday" else 0
-    Day_of_Week_Thursday = 1 if day == "Thursday" else 0
     Day_of_Week_Tuesday = 1 if day == "Tuesday" else 0
     Day_of_Week_Wednesday = 1 if day == "Wednesday" else 0
+    Day_of_Week_Thursday = 1 if day == "Thursday" else 0
+    Day_of_Week_Saturday = 1 if day == "Saturday" else 0
+    Day_of_Week_Sunday = 1 if day == "Sunday" else 0
 
-# --------------------------
-# 📊 Live Chart
-# --------------------------
+    # ====================== LIVE CHART ======================
     if "prediction" in st.session_state:
+        st.markdown("### 📊 Output vs Efficiency Score")
 
-        # Generate efficiency range
-        efficiency_values = [i/10 for i in range(1, 11)]  # 0.1 → 1.0
+        efficiency_values = [i/10 for i in range(1, 11)]
         predictions = []
 
         for eff in efficiency_values:
@@ -181,7 +173,7 @@ with right:
                 "Maintenance_Hours": Maintenance_Hours,
                 "Temperature_Pressure_Ratio": Temperature_Pressure_Ratio,
                 "Total_Cycle_Time": Total_Cycle_Time,
-                "Efficiency_Score": eff,  # ✅ FIXED
+                "Efficiency_Score": eff,
                 "Machine_Utilization": Machine_Utilization,
                 "Shift_Evening": Shift_Evening,
                 "Shift_Night": Shift_Night,
@@ -190,55 +182,39 @@ with right:
                 "Material_Grade_Premium": Material_Grade_Premium,
                 "Material_Grade_Standard": Material_Grade_Standard,
                 "Day_of_Week_Monday": Day_of_Week_Monday,
+                "Day_of_Week_Tuesday": Day_of_Week_Tuesday,
+                "Day_of_Week_Wednesday": Day_of_Week_Wednesday,
+                "Day_of_Week_Thursday": Day_of_Week_Thursday,
                 "Day_of_Week_Saturday": Day_of_Week_Saturday,
                 "Day_of_Week_Sunday": Day_of_Week_Sunday,
-                "Day_of_Week_Thursday": Day_of_Week_Thursday,
-                "Day_of_Week_Tuesday": Day_of_Week_Tuesday,
-                "Day_of_Week_Wednesday": Day_of_Week_Wednesday
             }
-        
 
             try:
-                response = requests.post(
-                    "http://127.0.0.1:8000/predict",
-                    json=temp_input
-                )
+                backend_url = os.getenv("BACKEND_URL", "http://127.0.0.1:8000")
+                response = requests.post(f"{backend_url}/predict", json=temp_input, timeout=5)
                 pred = response.json()["prediction"]
                 predictions.append(pred)
             except:
-                predictions.append(None)
+                predictions.append(0)
 
-        # Create chart
         fig = go.Figure()
+        fig.add_trace(go.Scatter(x=efficiency_values, y=predictions,
+                                 mode='lines+markers',
+                                 line=dict(color='#9c6644', width=4),
+                                 marker=dict(size=8, color='#c89a6e')))
 
-        fig.add_trace(go.Scatter(
-            x=efficiency_values,
-            y=predictions,
-            mode='lines+markers',
-            name='Prediction',
-            line=dict(width=3)
-        ))
-
-        fig.update_layout(
-            title="📊 Output vs Efficiency",
-            xaxis_title="Efficiency Score",
-            yaxis_title="Predicted Output",
-            template="plotly_dark",
-            height=300
-        )
+        fig.update_layout(title="Sensitivity to Efficiency Score",
+                          xaxis_title="Efficiency Score",
+                          yaxis_title="Predicted Parts/Hour",
+                          template="plotly_white", height=340)
 
         st.plotly_chart(fig, use_container_width=True)
 
-# --------------------------
-# Predict Button
-# --------------------------
-st.divider()
-
+# ====================== PREDICTION ON BUTTON CLICK ======================
+# ====================== PREDICTION ON BUTTON CLICK ======================
 if predict_clicked:
-
-
     with st.spinner("Predicting... ⏳"):
-        time.sleep(1)  # smooth UX
+        time.sleep(0.8)
 
         input_data = {
             "Injection_Temperature": Injection_Temperature,
@@ -261,23 +237,21 @@ if predict_clicked:
             "Material_Grade_Premium": Material_Grade_Premium,
             "Material_Grade_Standard": Material_Grade_Standard,
             "Day_of_Week_Monday": Day_of_Week_Monday,
+            "Day_of_Week_Tuesday": Day_of_Week_Tuesday,
+            "Day_of_Week_Wednesday": Day_of_Week_Wednesday,
+            "Day_of_Week_Thursday": Day_of_Week_Thursday,
             "Day_of_Week_Saturday": Day_of_Week_Saturday,
             "Day_of_Week_Sunday": Day_of_Week_Sunday,
-            "Day_of_Week_Thursday": Day_of_Week_Thursday,
-            "Day_of_Week_Tuesday": Day_of_Week_Tuesday,
-            "Day_of_Week_Wednesday": Day_of_Week_Wednesday
         }
 
         try:
-            response = requests.post(
-                "http://127.0.0.1:8000/predict",
-                json=input_data
-            )
-
+            # ✅ Use environment variable for Docker compatibility
+            backend_url = os.getenv("BACKEND_URL", "http://127.0.0.1:8000")
+            response = requests.post(f"{backend_url}/predict", json=input_data, timeout=8)
+            
             result = response.json()
             st.session_state["prediction"] = result["prediction"]
-
             st.rerun()
 
         except Exception as e:
-            st.error(f"Error: {e}")
+            st.error(f"Error connecting to backend: {e}")
