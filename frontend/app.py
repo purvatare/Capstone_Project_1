@@ -190,7 +190,7 @@ with right:
             }
 
             try:
-                backend_url = os.getenv("BACKEND_URL", "https://capstone-project-1-7izl.onrender.com/predict")
+                backend_url = os.getenv("BACKEND_URL", "http://127.0.0.1:8000")
                 response = requests.post(f"{backend_url}/predict", json=temp_input, timeout=5)
                 pred = response.json()["prediction"]
                 predictions.append(pred)
@@ -246,7 +246,7 @@ if predict_clicked:
 
         try:
             # ✅ Use environment variable for Docker compatibility
-            backend_url = os.getenv("BACKEND_URL", "https://capstone-project-1-7izl.onrender.com/predict")
+            backend_url = os.getenv("BACKEND_URL", "http://127.0.0.1:8000")
             response = requests.post(f"{backend_url}/predict", json=input_data, timeout=8)
             
             result = response.json()
